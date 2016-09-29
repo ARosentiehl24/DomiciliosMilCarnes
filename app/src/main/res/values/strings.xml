@@ -2,4 +2,8 @@
     <string name="app_name">Domicilios Mil Carnes</string>
     <string name="search">Search</string>
     <string name="sign_out">Sign Out</string>
+    <string name="sign_up">Sign up</string>
+    <string name="login">Login</string>
+    <string name="nickname">Nickname</string>
+    <string name="password">Password</string>
 </resources>

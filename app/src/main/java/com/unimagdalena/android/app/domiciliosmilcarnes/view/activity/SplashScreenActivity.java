@@ -1,9 +1,11 @@
-package com.unimagdalena.android.app.domiciliosmilcarnes;
+package com.unimagdalena.android.app.domiciliosmilcarnes.view.activity;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 

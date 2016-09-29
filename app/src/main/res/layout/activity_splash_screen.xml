@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
-    tools:context="com.unimagdalena.android.app.domiciliosmilcarnes.SplashScreenActivity">
+    tools:context="com.unimagdalena.android.app.domiciliosmilcarnes.view.activity.SplashScreenActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,8 +19,8 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:layout_margin="25dp"
             android:contentDescription="@null"
-            android:scaleType="centerCrop"
             android:src="@drawable/ic_logo" />
     </RelativeLayout>
 
@@ -31,10 +31,9 @@
 
         <ProgressBar
             android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerInParent="true" />
     </RelativeLayout>
 </LinearLayout>
