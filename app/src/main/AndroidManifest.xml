@@ -4,6 +4,7 @@
     package="com.unimagdalena.android.app.domiciliosmilcarnes">
 
     <application
+        android:name=".MilCarnesApp"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"

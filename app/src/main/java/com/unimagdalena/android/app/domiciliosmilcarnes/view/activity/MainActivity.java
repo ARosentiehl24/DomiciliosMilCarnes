@@ -4,8 +4,10 @@ import android.animation.Animator;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mmin18.widget.RealtimeBlurView;
 import com.shawnlin.preferencesmanager.PreferencesManager;
@@ -64,6 +67,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (isLoginVisible) {
+            hideLogin();
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         if (isLoginVisible) {
             hideLogin();
@@ -78,6 +90,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         if (thereConnectedUser) {
             getMenuInflater().inflate(R.menu.login_menu, menu);
+
+            MenuItem actionSearch = menu.findItem(R.id.app_bar_search);
+            SearchView searchView = (SearchView) MenuItemCompat.getActionView(actionSearch);
+            searchView.setQueryHint(getString(R.string.search));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
         } else {
             getMenuInflater().inflate(R.menu.no_login_menu, menu);
         }
@@ -91,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         switch (id) {
             case R.id.app_bar_log_out:
+                PreferencesManager.putBoolean(getString(R.string.there_connected_user), false);
+
                 iMainActivityPresenter.itemLogOut();
                 return true;
             case R.id.app_bar_login:
@@ -126,7 +155,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
                     String nickName = etNickName.getText().toString();
                     String password = etPassword.getText().toString();
 
-                    iMainActivityPresenter.login(nickName, password);
+                    if (nickName.length() <= 0) {
+                        etNickName.requestFocus();
+
+                        toast(getString(R.string.field_empty_message));
+                    } else if (password.length() <= 0) {
+                        etPassword.requestFocus();
+
+                        toast(getString(R.string.field_empty_message));
+                    } else {
+                        PreferencesManager.putBoolean(getString(R.string.there_connected_user), true);
+
+                        iMainActivityPresenter.login(nickName, password);
+                    }
 
                     return true;
                 }
@@ -232,5 +273,41 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     public void hideKeyboard(View view, Context context) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void clearInputs() {
+        etNickName.getText().clear();
+        etPassword.getText().clear();
+
+        etNickName.requestFocus();
+    }
+
+    @Override
+    public void showErrorMessage() {
+        toast(getString(R.string.nickname_does_not_exist_message));
+    }
+
+    @Override
+    public void toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateToolbarMenu(boolean showWelcomeMessage) {
+        hideKeyboard(etNickName, this);
+
+        if (showWelcomeMessage) {
+            toast(String.format(getString(R.string.welcome_message), etNickName.getText().toString()));
+        }
+
+        /*Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);*/
+
+        Navigator.with(this).build().goTo(MainActivity.class).animation().commit();
+        finish();
     }
 }

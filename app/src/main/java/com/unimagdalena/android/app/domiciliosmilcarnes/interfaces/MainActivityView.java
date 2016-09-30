@@ -16,4 +16,12 @@ public interface MainActivityView {
     void showKeyboard(View view, Context context);
 
     void hideKeyboard(View view, Context context);
+
+    void clearInputs();
+
+    void showErrorMessage();
+
+    void toast(String message);
+
+    void updateToolbarMenu(boolean showWelcomeMessage);
 }

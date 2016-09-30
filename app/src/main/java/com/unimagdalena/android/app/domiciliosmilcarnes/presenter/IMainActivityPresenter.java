@@ -1,7 +1,9 @@
 package com.unimagdalena.android.app.domiciliosmilcarnes.presenter;
 
+import com.shawnlin.preferencesmanager.PreferencesManager;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.MainActivityPresenter;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.MainActivityView;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
 
 
 public class IMainActivityPresenter implements MainActivityPresenter {
@@ -19,7 +21,7 @@ public class IMainActivityPresenter implements MainActivityPresenter {
 
     @Override
     public void itemLogOut() {
-
+        mainActivityView.updateToolbarMenu(false);
     }
 
     @Override
@@ -43,6 +45,18 @@ public class IMainActivityPresenter implements MainActivityPresenter {
 
     @Override
     public void login(String nickName, String password) {
+        User storedUser = PreferencesManager.getObject(nickName, User.class);
 
+        if (storedUser == null) {
+            mainActivityView.clearInputs();
+            mainActivityView.showErrorMessage();
+        } else {
+            if (password.equals(storedUser.getPassword())) {
+                mainActivityView.updateToolbarMenu(true);
+            } else {
+                mainActivityView.clearInputs();
+                mainActivityView.showErrorMessage();
+            }
+        }
     }
 }

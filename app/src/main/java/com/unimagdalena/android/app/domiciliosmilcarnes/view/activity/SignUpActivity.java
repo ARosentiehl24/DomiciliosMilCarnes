@@ -1,5 +1,6 @@
 package com.unimagdalena.android.app.domiciliosmilcarnes.view.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +10,14 @@ import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.shawnlin.preferencesmanager.PreferencesManager;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.SignUpActivityView;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
 import com.unimagdalena.android.app.domiciliosmilcarnes.presenter.ISignUpActivityPresenter;
 
 import org.fingerlinks.mobile.android.navigator.Navigator;
@@ -49,6 +54,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
 
         iSignUpActivityPresenter = new ISignUpActivityPresenter(this);
         iSignUpActivityPresenter.onCreate();
+
     }
 
     @Override
@@ -98,9 +104,14 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
         VerticalStepperFormLayout.Builder.newInstance(verticalStepperFormLayout, titles, this, this)
                 .primaryColor(colorPrimary)
                 .primaryDarkColor(colorPrimaryDark)
-                .displayBottomNavigation(true)
+                .displayBottomNavigation(false)
                 .stepsSubtitles(subTitles)
                 .init();
+    }
+
+    @Override
+    public void toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -223,8 +234,117 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
         }
     }
 
+    public void showKeyboard(View view, Context context) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+    }
+
+    public void hideKeyboard(View view, Context context) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     @Override
     public void sendData() {
+        if (etId.getText().length() <= 0) {
+            verticalStepperFormLayout.goToStep(0, false);
 
+            etId.requestFocus();
+            showKeyboard(etId, this);
+            
+            toast(getString(R.string.field_empty_message));
+        } else if (etName.getText().length() <= 0) {
+            verticalStepperFormLayout.goToStep(1, false);
+
+            etName.requestFocus();
+            showKeyboard(etName, this);
+
+            toast(getString(R.string.field_empty_message));
+        } else if (etLastName.getText().length() <= 0) {
+            verticalStepperFormLayout.goToStep(2, false);
+
+            etLastName.requestFocus();
+            showKeyboard(etLastName, this);
+
+            toast(getString(R.string.field_empty_message));
+        } else if (etNickName.getText().length() <= 0) {
+            verticalStepperFormLayout.goToStep(3, false);
+
+            etNickName.requestFocus();
+            showKeyboard(etNickName, this);
+
+            toast(getString(R.string.field_empty_message));
+        } else if (etPassword.getText().length() <= 0) {
+            verticalStepperFormLayout.goToStep(4, false);
+
+            etPassword.requestFocus();
+            showKeyboard(etPassword, this);
+
+            toast(getString(R.string.field_empty_message));
+        } else if (etRepeatPassword.getText().length() <= 0) {
+            verticalStepperFormLayout.goToStep(5, false);
+
+            etRepeatPassword.requestFocus();
+            showKeyboard(etRepeatPassword, this);
+
+            toast(getString(R.string.field_empty_message));
+        } else if (etPhoneNumber.getText().length() <= 0) {
+            verticalStepperFormLayout.goToStep(6, false);
+
+            etPhoneNumber.requestFocus();
+            showKeyboard(etPhoneNumber, this);
+
+            toast(getString(R.string.field_empty_message));
+        } else if (etAddress.getText().length() <= 0) {
+            verticalStepperFormLayout.goToStep(7, false);
+
+            etAddress.requestFocus();
+            showKeyboard(etAddress, this);
+
+            toast(getString(R.string.field_empty_message));
+        } else {
+            User storedUser = PreferencesManager.getObject(etNickName.getText().toString(), User.class);
+
+            if (storedUser == null) {
+                if (etPassword.getText().toString().equals(etRepeatPassword.getText().toString())) {
+                    User newUser = new User(Integer.valueOf(etId.getText().toString()),
+                            etName.getText().toString(),
+                            etLastName.getText().toString(),
+                            etNickName.getText().toString(),
+                            etPassword.getText().toString(),
+                            etPhoneNumber.getText().toString(),
+                            etAddress.getText().toString());
+
+                    PreferencesManager.putObject(etNickName.getText().toString(), newUser);
+
+                    toast(getString(R.string.successful_registration_message));
+
+                    onBackPressed();
+                } else {
+                    verticalStepperFormLayout.goToStep(5, false);
+
+                    etRepeatPassword.requestFocus();
+                    showKeyboard(etRepeatPassword, this);
+
+                    toast(getString(R.string.passwords_do_not_match_message));
+                }
+            } else {
+                if (etId.getText().toString().equals(String.valueOf(storedUser.getId()))) {
+                    verticalStepperFormLayout.goToStep(0, false);
+
+                    etId.requestFocus();
+                    showKeyboard(etId, this);
+
+                    toast(getString(R.string.id_already_in_use_message));
+                } else if (etNickName.getText().toString().equals(storedUser.getNickName())) {
+                    verticalStepperFormLayout.goToStep(3, false);
+
+                    etNickName.requestFocus();
+                    showKeyboard(etNickName, this);
+
+                    toast(getString(R.string.nickname_already_in_use_message));
+                }
+            }
+        }
     }
 }
