@@ -6,4 +6,19 @@
     <string name="login">Login</string>
     <string name="nickname">Nickname</string>
     <string name="password">Password</string>
+    <string name="identification">Identification</string>
+    <string name="id">Id</string>
+    <string name="name">Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="address">Address</string>
+    <string name="request_identification">Enter your identification</string>
+    <string name="request_name">Enter your name</string>
+    <string name="request_last_name">Enter your last name</string>
+    <string name="request_nickname">Enter a nickname</string>
+    <string name="request_password">Enter a password</string>
+    <string name="request_repeat_password">Enter the password again</string>
+    <string name="request_phone_number">Enter a valid phone number</string>
+    <string name="request_address">Enter your address</string>
 </resources>
