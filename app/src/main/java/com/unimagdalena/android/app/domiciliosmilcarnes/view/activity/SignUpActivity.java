@@ -251,7 +251,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
 
             etId.requestFocus();
             showKeyboard(etId, this);
-            
+
             toast(getString(R.string.field_empty_message));
         } else if (etName.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(1, false);
