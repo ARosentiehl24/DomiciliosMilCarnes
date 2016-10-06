@@ -9,6 +9,8 @@ public interface MainActivityView {
 
     void singUp();
 
+    void editProfile();
+
     void hideLogin();
 
     void showLogin();
@@ -23,5 +25,5 @@ public interface MainActivityView {
 
     void toast(String message);
 
-    void updateToolbarMenu(boolean showWelcomeMessage);
+    void updateToolbarMenu(boolean showWelcomeMessage, String name);
 }

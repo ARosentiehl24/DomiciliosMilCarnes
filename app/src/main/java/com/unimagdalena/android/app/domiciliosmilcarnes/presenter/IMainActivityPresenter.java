@@ -21,7 +21,7 @@ public class IMainActivityPresenter implements MainActivityPresenter {
 
     @Override
     public void itemLogOut() {
-        mainActivityView.updateToolbarMenu(false);
+        mainActivityView.updateToolbarMenu(false, null);
     }
 
     @Override
@@ -39,20 +39,27 @@ public class IMainActivityPresenter implements MainActivityPresenter {
     }
 
     @Override
+    public void itemEdit() {
+        mainActivityView.editProfile();
+    }
+
+    @Override
     public void itemSignUp() {
         mainActivityView.singUp();
     }
 
     @Override
-    public void login(String nickName, String password) {
-        User storedUser = PreferencesManager.getObject(nickName, User.class);
+    public void login(String email, String password) {
+        User storedUser = PreferencesManager.getObject(email, User.class);
 
         if (storedUser == null) {
             mainActivityView.clearInputs();
             mainActivityView.showErrorMessage();
         } else {
             if (password.equals(storedUser.getPassword())) {
-                mainActivityView.updateToolbarMenu(true);
+                PreferencesManager.putString("connected_user", email);
+
+                mainActivityView.updateToolbarMenu(true, storedUser.getName());
             } else {
                 mainActivityView.clearInputs();
                 mainActivityView.showErrorMessage();

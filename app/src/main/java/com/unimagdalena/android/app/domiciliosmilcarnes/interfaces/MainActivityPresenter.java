@@ -10,7 +10,9 @@ public interface MainActivityPresenter {
 
     void itemSearch();
 
+    void itemEdit();
+
     void itemSignUp();
 
-    void login(String nickName, String password);
+    void login(String email, String password);
 }

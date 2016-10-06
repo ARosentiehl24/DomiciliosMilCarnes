@@ -32,11 +32,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
     private AppCompatEditText etId;
     private AppCompatEditText etName;
     private AppCompatEditText etLastName;
-    private AppCompatEditText etNickName;
+    private AppCompatEditText etEmail;
     private AppCompatEditText etPassword;
     private AppCompatEditText etRepeatPassword;
     private AppCompatEditText etPhoneNumber;
     private AppCompatEditText etAddress;
+    private Boolean isInEditMode = false;
 
     private ISignUpActivityPresenter iSignUpActivityPresenter;
 
@@ -54,7 +55,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
 
         iSignUpActivityPresenter = new ISignUpActivityPresenter(this);
         iSignUpActivityPresenter.onCreate();
-
     }
 
     @Override
@@ -80,10 +80,10 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String[] titles = {getString(R.string.id),
+        String[] titles = {getString(R.string.identification),
                 getString(R.string.name),
                 getString(R.string.last_name),
-                getString(R.string.nickname),
+                getString(R.string.email),
                 getString(R.string.password),
                 getString(R.string.repeat_password),
                 getString(R.string.phone_number),
@@ -92,7 +92,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
         String[] subTitles = {getString(R.string.request_identification),
                 getString(R.string.request_name),
                 getString(R.string.request_last_name),
-                getString(R.string.request_nickname),
+                getString(R.string.request_email),
                 getString(R.string.request_password),
                 getString(R.string.request_repeat_password),
                 getString(R.string.request_phone_number),
@@ -100,13 +100,54 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
 
         int colorPrimary = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
         int colorPrimaryDark = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark);
+        int colorAccent = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
 
         VerticalStepperFormLayout.Builder.newInstance(verticalStepperFormLayout, titles, this, this)
                 .primaryColor(colorPrimary)
                 .primaryDarkColor(colorPrimaryDark)
                 .displayBottomNavigation(false)
                 .stepsSubtitles(subTitles)
+                .buttonTextColor(colorAccent)
+                .buttonPressedBackgroundColor(colorPrimaryDark)
+                .buttonPressedTextColor(colorAccent)
+                .stepNumberTextColor(colorAccent)
+                .stepTitleTextColor(colorPrimary)
+                .stepSubtitleTextColor(ContextCompat.getColor(getApplicationContext(), R.color.textColor))
+                .showVerticalLineWhenStepsAreCollapsed(false)
                 .init();
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            isInEditMode = bundle.getBoolean("edit", false);
+        }
+
+        if (isInEditMode) {
+            setTitle("Modificar Perfil");
+
+            String connectedUser = PreferencesManager.getString(getString(R.string.connected_user));
+
+            User user = PreferencesManager.getObject(connectedUser, User.class);
+
+            etId.setText(String.valueOf(user.getId()));
+            etName.setText(user.getName());
+            etLastName.setText(user.getLastName());
+            etEmail.setText(user.getEmail());
+            etPhoneNumber.setText(user.getPhoneNumber());
+            etAddress.setText(user.getAddress());
+
+            etId.setEnabled(false);
+            etEmail.setEnabled(false);
+
+            etPassword.setHint("Contraseña anterior");
+            etRepeatPassword.setHint("Nueva contraseña");
+
+            verticalStepperFormLayout.setStepTitle(4, "Contraseña anterior");
+            verticalStepperFormLayout.setStepSubtitle(4, "Ingrese la contraseña anterior");
+
+            verticalStepperFormLayout.setStepTitle(5, "Nueva contraseña");
+            verticalStepperFormLayout.setStepSubtitle(5, "Ingrese la nueva contraseña");
+        }
     }
 
     @Override
@@ -122,9 +163,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             case 0:
                 etId = new AppCompatEditText(this);
                 etId.setHint(R.string.identification);
+                etId.setHintTextColor(ContextCompat.getColor(this, R.color.hintTextColor));
                 etId.setInputType(InputType.TYPE_CLASS_NUMBER);
                 etId.setMaxLines(1);
                 etId.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                etId.setTextColor(ContextCompat.getColor(this, R.color.textColor));
 
                 view = etId;
 
@@ -132,9 +175,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             case 1:
                 etName = new AppCompatEditText(this);
                 etName.setHint(R.string.name);
+                etName.setHintTextColor(ContextCompat.getColor(this, R.color.hintTextColor));
                 etName.setInputType(InputType.TYPE_CLASS_TEXT);
                 etName.setMaxLines(1);
                 etName.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                etName.setTextColor(ContextCompat.getColor(this, R.color.textColor));
 
                 view = etName;
 
@@ -142,29 +187,35 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             case 2:
                 etLastName = new AppCompatEditText(this);
                 etLastName.setHint(R.string.last_name);
+                etLastName.setHintTextColor(ContextCompat.getColor(this, R.color.hintTextColor));
                 etLastName.setInputType(InputType.TYPE_CLASS_TEXT);
                 etLastName.setMaxLines(1);
                 etLastName.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                etLastName.setTextColor(ContextCompat.getColor(this, R.color.textColor));
 
                 view = etLastName;
 
                 break;
             case 3:
-                etNickName = new AppCompatEditText(this);
-                etNickName.setHint(R.string.nickname);
-                etNickName.setInputType(InputType.TYPE_CLASS_TEXT);
-                etNickName.setMaxLines(1);
-                etNickName.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                etEmail = new AppCompatEditText(this);
+                etEmail.setHint(R.string.email);
+                etEmail.setHintTextColor(ContextCompat.getColor(this, R.color.hintTextColor));
+                etEmail.setInputType(InputType.TYPE_CLASS_TEXT);
+                etEmail.setMaxLines(1);
+                etEmail.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                etEmail.setTextColor(ContextCompat.getColor(this, R.color.textColor));
 
-                view = etNickName;
+                view = etEmail;
 
                 break;
             case 4:
                 etPassword = new AppCompatEditText(this);
                 etPassword.setHint(R.string.password);
+                etPassword.setHintTextColor(ContextCompat.getColor(this, R.color.hintTextColor));
                 etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 etPassword.setMaxLines(1);
                 etPassword.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                etPassword.setTextColor(ContextCompat.getColor(this, R.color.textColor));
 
                 view = etPassword;
 
@@ -172,9 +223,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             case 5:
                 etRepeatPassword = new AppCompatEditText(this);
                 etRepeatPassword.setHint(R.string.repeat_password);
+                etRepeatPassword.setHintTextColor(ContextCompat.getColor(this, R.color.hintTextColor));
                 etRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 etRepeatPassword.setMaxLines(1);
                 etRepeatPassword.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                etRepeatPassword.setTextColor(ContextCompat.getColor(this, R.color.textColor));
 
                 view = etRepeatPassword;
 
@@ -182,9 +235,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             case 6:
                 etPhoneNumber = new AppCompatEditText(this);
                 etPhoneNumber.setHint(R.string.phone_number);
+                etPhoneNumber.setHintTextColor(ContextCompat.getColor(this, R.color.hintTextColor));
                 etPhoneNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
                 etPhoneNumber.setMaxLines(1);
                 etPhoneNumber.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                etPhoneNumber.setTextColor(ContextCompat.getColor(this, R.color.textColor));
 
                 view = etPhoneNumber;
 
@@ -192,9 +247,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             case 7:
                 etAddress = new AppCompatEditText(this);
                 etAddress.setHint(R.string.address);
+                etAddress.setHintTextColor(ContextCompat.getColor(this, R.color.hintTextColor));
                 etAddress.setInputType(InputType.TYPE_CLASS_TEXT);
                 etAddress.setMaxLines(1);
                 etAddress.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                etAddress.setTextColor(ContextCompat.getColor(this, R.color.textColor));
 
                 view = etAddress;
 
@@ -267,11 +324,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             showKeyboard(etLastName, this);
 
             toast(getString(R.string.field_empty_message));
-        } else if (etNickName.getText().length() <= 0) {
+        } else if (etEmail.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(3, false);
 
-            etNickName.requestFocus();
-            showKeyboard(etNickName, this);
+            etEmail.requestFocus();
+            showKeyboard(etEmail, this);
 
             toast(getString(R.string.field_empty_message));
         } else if (etPassword.getText().length() <= 0) {
@@ -303,46 +360,68 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
 
             toast(getString(R.string.field_empty_message));
         } else {
-            User storedUser = PreferencesManager.getObject(etNickName.getText().toString(), User.class);
+            if (isInEditMode) {
+                User storedUser = PreferencesManager.getObject(etEmail.getText().toString(), User.class);
 
-            if (storedUser == null) {
-                if (etPassword.getText().toString().equals(etRepeatPassword.getText().toString())) {
-                    User newUser = new User(Integer.valueOf(etId.getText().toString()),
+                if (storedUser.getPassword().equals(etPassword.getText().toString())) {
+                    User newUser = new User((etId.getText().toString()),
                             etName.getText().toString(),
                             etLastName.getText().toString(),
-                            etNickName.getText().toString(),
-                            etPassword.getText().toString(),
+                            etEmail.getText().toString(),
+                            etRepeatPassword.getText().toString(),
                             etPhoneNumber.getText().toString(),
                             etAddress.getText().toString());
 
-                    PreferencesManager.putObject(etNickName.getText().toString(), newUser);
+                    PreferencesManager.putObject(etEmail.getText().toString(), newUser);
 
                     toast(getString(R.string.successful_registration_message));
 
                     onBackPressed();
                 } else {
-                    verticalStepperFormLayout.goToStep(5, false);
-
-                    etRepeatPassword.requestFocus();
-                    showKeyboard(etRepeatPassword, this);
-
                     toast(getString(R.string.passwords_do_not_match_message));
                 }
             } else {
-                if (etId.getText().toString().equals(String.valueOf(storedUser.getId()))) {
-                    verticalStepperFormLayout.goToStep(0, false);
+                User storedUser = PreferencesManager.getObject(etEmail.getText().toString(), User.class);
 
-                    etId.requestFocus();
-                    showKeyboard(etId, this);
+                if (storedUser == null) {
+                    if (etPassword.getText().toString().equals(etRepeatPassword.getText().toString())) {
+                        User newUser = new User((etId.getText().toString()),
+                                etName.getText().toString(),
+                                etLastName.getText().toString(),
+                                etEmail.getText().toString(),
+                                etPassword.getText().toString(),
+                                etPhoneNumber.getText().toString(),
+                                etAddress.getText().toString());
 
-                    toast(getString(R.string.id_already_in_use_message));
-                } else if (etNickName.getText().toString().equals(storedUser.getNickName())) {
-                    verticalStepperFormLayout.goToStep(3, false);
+                        PreferencesManager.putObject(etEmail.getText().toString(), newUser);
 
-                    etNickName.requestFocus();
-                    showKeyboard(etNickName, this);
+                        toast(getString(R.string.successful_registration_message));
 
-                    toast(getString(R.string.nickname_already_in_use_message));
+                        onBackPressed();
+                    } else {
+                        verticalStepperFormLayout.goToStep(5, false);
+
+                        etRepeatPassword.requestFocus();
+                        showKeyboard(etRepeatPassword, this);
+
+                        toast(getString(R.string.passwords_do_not_match_message));
+                    }
+                } else {
+                    if (etId.getText().toString().equals(String.valueOf(storedUser.getId()))) {
+                        verticalStepperFormLayout.goToStep(0, false);
+
+                        etId.requestFocus();
+                        showKeyboard(etId, this);
+
+                        toast(getString(R.string.id_already_in_use_message));
+                    } else if (etEmail.getText().toString().equals(storedUser.getEmail())) {
+                        verticalStepperFormLayout.goToStep(3, false);
+
+                        etEmail.requestFocus();
+                        showKeyboard(etAddress, this);
+
+                        toast(getString(R.string.email_already_in_use_message));
+                    }
                 }
             }
         }

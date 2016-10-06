@@ -7,7 +7,7 @@
     <string name="nickname">Nickname</string>
     <string name="password">Password</string>
     <string name="identification">Identification</string>
-    <string name="id">Id</string>
+    <string name="id">Identification</string>
     <string name="name">Name</string>
     <string name="last_name">Last Name</string>
     <string name="repeat_password">Repeat Password</string>
@@ -25,7 +25,10 @@
     <string name="field_empty_message">This field is empty</string>
     <string name="passwords_do_not_match_message">The passwords do not match</string>
     <string name="id_already_in_use_message">This id is already in use</string>
-    <string name="nickname_already_in_use_message">This nickname is already in use</string>
+    <string name="email_already_in_use_message">This email is already in use</string>
     <string name="successful_registration_message">Successful registration</string>
     <string name="welcome_message">Welcome %s</string>
+    <string name="app_bar_edit">Edit</string>
+    <string name="email">Email</string>
+    <string name="request_email">Enter your email</string>
 </resources>

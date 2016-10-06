@@ -2,29 +2,29 @@ package com.unimagdalena.android.app.domiciliosmilcarnes.model.entity;
 
 public class User {
 
-    private Integer id;
+    private String id;
     private String name;
     private String lastName;
-    private String nickName;
+    private String email;
     private String password;
     private String phoneNumber;
     private String Address;
 
-    public User(Integer id, String name, String lastName, String nickName, String password, String phoneNumber, String address) {
+    public User(String id, String name, String lastName, String email, String password, String phoneNumber, String address) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
-        this.nickName = nickName;
+        this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         Address = address;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -42,14 +42,6 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
     }
 
     public String getPassword() {
@@ -74,5 +66,13 @@ public class User {
 
     public void setAddress(String address) {
         Address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

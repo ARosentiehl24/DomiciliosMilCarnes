@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     private Boolean isLoginVisible = false;
     private IMainActivityPresenter iMainActivityPresenter;
 
-    @BindView(R.id.etNickName)
-    AppCompatEditText etNickName;
+    @BindView(R.id.etEmail)
+    AppCompatEditText etEmail;
 
     @BindView(R.id.etPassword)
     AppCompatEditText etPassword;
@@ -127,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
                 return true;
             case R.id.app_bar_search:
                 iMainActivityPresenter.itemSearch();
+            case R.id.app_bar_edit:
+                iMainActivityPresenter.itemEdit();
                 return true;
             case R.id.app_bar_sign_up:
                 iMainActivityPresenter.itemSignUp();
@@ -152,11 +154,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String nickName = etNickName.getText().toString();
+                    String email = etEmail.getText().toString();
                     String password = etPassword.getText().toString();
 
-                    if (nickName.length() <= 0) {
-                        etNickName.requestFocus();
+                    if (email.length() <= 0) {
+                        etEmail.requestFocus();
 
                         toast(getString(R.string.field_empty_message));
                     } else if (password.length() <= 0) {
@@ -164,9 +166,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
                         toast(getString(R.string.field_empty_message));
                     } else {
-                        PreferencesManager.putBoolean(getString(R.string.there_connected_user), true);
-
-                        iMainActivityPresenter.login(nickName, password);
+                        iMainActivityPresenter.login(email, password);
                     }
 
                     return true;
@@ -179,6 +179,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     @Override
     public void singUp() {
         Navigator.with(this).build().goTo(SignUpActivity.class).animation().commit();
+    }
+
+    @Override
+    public void editProfile() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("edit", true);
+
+        Navigator.with(this).build().goTo(SignUpActivity.class, bundle).animation().commit();
     }
 
     @Override
@@ -204,10 +212,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
                 isLoginVisible = false;
                 revealFrameLayout.setVisibility(View.INVISIBLE);
 
-                etNickName.getText().clear();
+                etEmail.getText().clear();
                 etPassword.getText().clear();
 
-                hideKeyboard(etNickName, getApplicationContext());
+                hideKeyboard(etEmail, getApplicationContext());
             }
 
             @Override
@@ -246,9 +254,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             public void onAnimationEnd(Animator animation) {
                 isLoginVisible = true;
 
-                etNickName.requestFocus();
+                etEmail.requestFocus();
 
-                showKeyboard(etNickName, getApplicationContext());
+                showKeyboard(etEmail, getApplicationContext());
             }
 
             @Override
@@ -277,10 +285,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
     @Override
     public void clearInputs() {
-        etNickName.getText().clear();
+        etEmail.getText().clear();
         etPassword.getText().clear();
 
-        etNickName.requestFocus();
+        etEmail.requestFocus();
     }
 
     @Override
@@ -294,11 +302,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     }
 
     @Override
-    public void updateToolbarMenu(boolean showWelcomeMessage) {
-        hideKeyboard(etNickName, this);
+    public void updateToolbarMenu(boolean showWelcomeMessage, String name) {
+        hideKeyboard(etEmail, this);
 
         if (showWelcomeMessage) {
-            toast(String.format(getString(R.string.welcome_message), etNickName.getText().toString()));
+            PreferencesManager.putBoolean(getString(R.string.there_connected_user), true);
+
+            toast(String.format(getString(R.string.welcome_message), name));
         }
 
         /*Intent intent = new Intent(this, MainActivity.class);

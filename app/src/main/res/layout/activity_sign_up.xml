@@ -7,11 +7,7 @@
     android:orientation="vertical"
     tools:context="com.unimagdalena.android.app.domiciliosmilcarnes.view.activity.SignUpActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/colorPrimary" />
+    <include layout="@layout/toolbar_layout" />
 
     <RelativeLayout
         android:id="@+id/container"
