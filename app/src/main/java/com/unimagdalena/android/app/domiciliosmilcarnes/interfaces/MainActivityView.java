@@ -26,4 +26,6 @@ public interface MainActivityView {
     void toast(String message);
 
     void updateToolbarMenu(boolean showWelcomeMessage, String name);
+
+    void showProfile();
 }

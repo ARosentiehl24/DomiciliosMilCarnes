@@ -25,6 +25,7 @@ import com.github.mmin18.widget.RealtimeBlurView;
 import com.shawnlin.preferencesmanager.PreferencesManager;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.MainActivityView;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
 import com.unimagdalena.android.app.domiciliosmilcarnes.presenter.IMainActivityPresenter;
 
 import org.fingerlinks.mobile.android.navigator.Navigator;
@@ -127,8 +128,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
                 return true;
             case R.id.app_bar_search:
                 iMainActivityPresenter.itemSearch();
-            case R.id.app_bar_edit:
-                iMainActivityPresenter.itemEdit();
+            case R.id.app_bar_profile:
+                iMainActivityPresenter.itemProfile();
                 return true;
             case R.id.app_bar_sign_up:
                 iMainActivityPresenter.itemSignUp();
@@ -319,5 +320,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         Navigator.with(this).build().goTo(MainActivity.class).animation().commit();
         finish();
+    }
+
+    @Override
+    public void showProfile() {
+        String connectedUser = PreferencesManager.getString(getString(R.string.connected_user));
+
+        User user = PreferencesManager.getObject(connectedUser, User.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", user);
+
+        Navigator.with(this).build().goTo(ProfileActivity.class, bundle).animation().commit();
     }
 }

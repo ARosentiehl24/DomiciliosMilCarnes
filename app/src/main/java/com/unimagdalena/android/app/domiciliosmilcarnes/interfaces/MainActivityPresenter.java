@@ -15,4 +15,6 @@ public interface MainActivityPresenter {
     void itemSignUp();
 
     void login(String email, String password);
+
+    void itemProfile();
 }

@@ -66,4 +66,9 @@ public class IMainActivityPresenter implements MainActivityPresenter {
             }
         }
     }
+
+    @Override
+    public void itemProfile() {
+        mainActivityView.showProfile();
+    }
 }

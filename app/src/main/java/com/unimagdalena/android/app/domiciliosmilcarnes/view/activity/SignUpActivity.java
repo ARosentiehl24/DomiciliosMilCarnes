@@ -102,7 +102,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
         int colorPrimaryDark = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark);
         int colorAccent = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
 
-        VerticalStepperFormLayout.Builder.newInstance(verticalStepperFormLayout, titles, this, this)
+        VerticalStepperFormLayout.Builder builder = VerticalStepperFormLayout.Builder.newInstance(verticalStepperFormLayout, titles, this, this)
                 .primaryColor(colorPrimary)
                 .primaryDarkColor(colorPrimaryDark)
                 .displayBottomNavigation(false)
@@ -113,8 +113,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                 .stepNumberTextColor(colorAccent)
                 .stepTitleTextColor(colorPrimary)
                 .stepSubtitleTextColor(ContextCompat.getColor(getApplicationContext(), R.color.textColor))
-                .showVerticalLineWhenStepsAreCollapsed(false)
-                .init();
+                .showVerticalLineWhenStepsAreCollapsed(false);
+        builder.init();
 
         Bundle bundle = getIntent().getExtras();
 
@@ -125,9 +125,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
         if (isInEditMode) {
             setTitle("Modificar Perfil");
 
-            String connectedUser = PreferencesManager.getString(getString(R.string.connected_user));
-
-            User user = PreferencesManager.getObject(connectedUser, User.class);
+            User user = (User) bundle.getSerializable("user");
 
             etId.setText(String.valueOf(user.getId()));
             etName.setText(user.getName());

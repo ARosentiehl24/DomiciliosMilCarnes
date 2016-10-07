@@ -29,6 +29,9 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/sign_up"
             android:parentActivityName=".view.activity.MainActivity" />
+        <activity
+            android:name=".view.activity.ProfileActivity"
+            android:parentActivityName=".view.activity.MainActivity" />
     </application>
 
 </manifest>
