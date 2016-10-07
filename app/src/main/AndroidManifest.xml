@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.unimagdalena.android.app.domiciliosmilcarnes">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission-sdk-23 android:name="android.permission.INTERNET" />
+
     <application
         android:name=".MilCarnesApp"
         android:allowBackup="true"

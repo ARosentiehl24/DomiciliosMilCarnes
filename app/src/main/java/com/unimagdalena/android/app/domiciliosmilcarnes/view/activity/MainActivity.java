@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,14 +22,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.github.mmin18.widget.RealtimeBlurView;
 import com.shawnlin.preferencesmanager.PreferencesManager;
+import com.unimagdalena.android.app.domiciliosmilcarnes.MilCarnesApp;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.MainActivityView;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.VolleySingleton;
 import com.unimagdalena.android.app.domiciliosmilcarnes.presenter.IMainActivityPresenter;
 
 import org.fingerlinks.mobile.android.navigator.Navigator;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
     private Boolean isLoginVisible = false;
     private IMainActivityPresenter iMainActivityPresenter;
+    private RequestQueue requestQueue;
 
     @BindView(R.id.etEmail)
     AppCompatEditText etEmail;
@@ -154,10 +169,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         etPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String email = etEmail.getText().toString();
-                    String password = etPassword.getText().toString();
+                final String email = etEmail.getText().toString();
+                final String password = etPassword.getText().toString();
 
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     if (email.length() <= 0) {
                         etEmail.requestFocus();
 
@@ -167,9 +182,76 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
                         toast(getString(R.string.field_empty_message));
                     } else {
-                        iMainActivityPresenter.login(email, password);
-                    }
+                        final String url = MilCarnesApp.milCarnesApp.GET_USER();
 
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.d(getClass().getSimpleName(), "onResponse: " + response);
+
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+
+                                    if (jsonObject.getString("estado").equals("1")) {
+
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d(getClass().getSimpleName(), "onErrorResponse: " + error.toString());
+                            }
+                        }) {
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+                                Map<String, String> map = new HashMap<>();
+                                map.put("usuario", email);
+                                map.put("password", password);
+
+                                return map;
+                            }
+
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                Map<String, String> params = new HashMap<>();
+                                params.put("Content-Type", "application/x-www-form-urlencoded");
+                                return params;
+                            }
+                        };
+
+                        /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                toast("Response: " + response.toString());
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                toast("Error: " + error.toString());
+                            }
+                        }) {
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+                                Map<String, String> map = new HashMap<>();
+                                map.put("usuario", email);
+                                map.put("password", password);
+
+                                return map;
+                            }
+
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                Map<String, String> params = new HashMap<>();
+                                params.put("Content-Type", "application/x-www-form-urlencoded");
+                                return params;
+                            }
+                        };
+*/
+                        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                    }
                     return true;
                 }
                 return false;

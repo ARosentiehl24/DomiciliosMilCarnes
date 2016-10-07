@@ -66,5 +66,9 @@ dependencies {
 
     compile 'org.fingerlinks.mobile.android:Navigator:0.1.5'
 
+    compile 'com.github.joaocruz04:jsoap:1.0.0'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.code.gson:gson:2.7'
+
     testCompile 'junit:junit:4.12'
 }

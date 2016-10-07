@@ -4,46 +4,48 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    private String id;
-    private String name;
-    private String lastName;
-    private String email;
+    private String cedula;
+    private String nombres;
+    private String apellidos;
+    private String correo;
     private String password;
-    private String phoneNumber;
-    private String Address;
+    private String telefono;
+    private String direccion;
+    private String Rol;
 
-    public User(String id, String name, String lastName, String email, String password, String phoneNumber, String address) {
-        this.id = id;
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
+    public User(String id, String name, String lastName, String email, String password, String phoneNumber, String address, String Rol) {
+        this.cedula = id;
+        this.nombres = name;
+        this.apellidos = lastName;
+        this.correo = email;
         this.password = password;
-        this.phoneNumber = phoneNumber;
-        Address = address;
+        this.telefono = phoneNumber;
+        this.direccion = address;
+        this.Rol = Rol;
     }
 
     public String getId() {
-        return id;
+        return cedula;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.cedula = id;
     }
 
     public String getName() {
-        return name;
+        return nombres;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.nombres = name;
     }
 
     public String getLastName() {
-        return lastName;
+        return apellidos;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.apellidos = lastName;
     }
 
     public String getPassword() {
@@ -55,26 +57,34 @@ public class User implements Serializable {
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return telefono;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.telefono = phoneNumber;
     }
 
     public String getAddress() {
-        return Address;
+        return direccion;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        direccion = address;
     }
 
     public String getEmail() {
-        return email;
+        return correo;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.correo = email;
+    }
+
+    public String getRol() {
+        return Rol;
+    }
+
+    public void setRol(String rol) {
+        Rol = rol;
     }
 }

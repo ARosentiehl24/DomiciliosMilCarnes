@@ -368,7 +368,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                             etEmail.getText().toString(),
                             etRepeatPassword.getText().toString(),
                             etPhoneNumber.getText().toString(),
-                            etAddress.getText().toString());
+                            etAddress.getText().toString(), "2");
 
                     PreferencesManager.putObject(etEmail.getText().toString(), newUser);
 
@@ -389,7 +389,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                                 etEmail.getText().toString(),
                                 etPassword.getText().toString(),
                                 etPhoneNumber.getText().toString(),
-                                etAddress.getText().toString());
+                                etAddress.getText().toString(), "2");
 
                         PreferencesManager.putObject(etEmail.getText().toString(), newUser);
 
