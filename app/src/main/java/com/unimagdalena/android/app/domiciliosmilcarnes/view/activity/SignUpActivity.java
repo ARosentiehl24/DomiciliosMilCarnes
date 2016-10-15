@@ -14,13 +14,25 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.shawnlin.preferencesmanager.PreferencesManager;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.unimagdalena.android.app.domiciliosmilcarnes.MilCarnesApp;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.SignUpActivityView;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.VolleySingleton;
 import com.unimagdalena.android.app.domiciliosmilcarnes.presenter.ISignUpActivityPresenter;
 
 import org.fingerlinks.mobile.android.navigator.Navigator;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -125,7 +137,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
         if (isInEditMode) {
             setTitle("Modificar Perfil");
 
-            User user = (User) bundle.getSerializable("user");
+            User user = (User) getIntent().getSerializableExtra(getString(R.string.connected_user));
 
             etId.setText(String.valueOf(user.getId()));
             etName.setText(user.getName());
@@ -301,6 +313,87 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
 
     @Override
     public void sendData() {
+        if (allFieldsAreValid()) {
+            final String cedula = getTextFrom(this.etId);
+            final String nombres = getTextFrom(this.etName);
+            final String apellidos = getTextFrom(this.etLastName);
+            final String telefono = getTextFrom(this.etPhoneNumber);
+            final String correo = getTextFrom(this.etEmail);
+            final String pass = getTextFrom(this.etPassword);
+            final String direccion = getTextFrom(this.etAddress);
+
+            StringRequest stringRequest = null;
+
+            if (isInEditMode) {
+
+            } else {
+                stringRequest = new StringRequest(Request.Method.POST, MilCarnesApp.milCarnesApp.INSERT(), new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            processCreateUpdateResponse(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(SignUpActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        HashMap<String, String> map = new HashMap<>();
+
+                        map.put("cedula", cedula);
+                        map.put("nombres", nombres);
+                        map.put("apellidos", apellidos);
+                        map.put("telefono", telefono);
+                        map.put("correo", correo);
+                        map.put("pass", pass);
+                        map.put("direccion", direccion);
+                        map.put("Rol", "1");
+
+                        return map;
+                    }
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("Content-Type", "application/x-www-form-urlencoded");
+                        return params;
+                    }
+                };
+            }
+
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        }
+    }
+
+    private void processCreateUpdateResponse(String response) throws JSONException {
+        JSONObject jsonObject = new JSONObject(response);
+
+        try {
+            String state = jsonObject.getString("estado");
+            String message = jsonObject.getString("mensaje");
+
+            switch (state) {
+                case "1":
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                    finish();
+                    break;
+                case "2":
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                    finish();
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean allFieldsAreValid() {
         if (etId.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(0, false);
 
@@ -308,6 +401,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             showKeyboard(etId, this);
 
             toast(getString(R.string.field_empty_message));
+
+            return false;
         } else if (etName.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(1, false);
 
@@ -315,6 +410,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             showKeyboard(etName, this);
 
             toast(getString(R.string.field_empty_message));
+
+            return false;
         } else if (etLastName.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(2, false);
 
@@ -322,6 +419,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             showKeyboard(etLastName, this);
 
             toast(getString(R.string.field_empty_message));
+
+            return false;
         } else if (etEmail.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(3, false);
 
@@ -329,6 +428,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             showKeyboard(etEmail, this);
 
             toast(getString(R.string.field_empty_message));
+
+            return false;
         } else if (etPassword.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(4, false);
 
@@ -336,6 +437,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             showKeyboard(etPassword, this);
 
             toast(getString(R.string.field_empty_message));
+
+            return false;
         } else if (etRepeatPassword.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(5, false);
 
@@ -343,6 +446,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             showKeyboard(etRepeatPassword, this);
 
             toast(getString(R.string.field_empty_message));
+
+            return false;
         } else if (etPhoneNumber.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(6, false);
 
@@ -350,6 +455,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             showKeyboard(etPhoneNumber, this);
 
             toast(getString(R.string.field_empty_message));
+
+            return false;
         } else if (etAddress.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(7, false);
 
@@ -357,71 +464,23 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             showKeyboard(etAddress, this);
 
             toast(getString(R.string.field_empty_message));
+
+            return false;
+        } else if (!etPassword.getText().toString().equals(etRepeatPassword.getText().toString())) {
+            verticalStepperFormLayout.goToStep(5, false);
+
+            etRepeatPassword.requestFocus();
+            showKeyboard(etRepeatPassword, this);
+
+            toast(getString(R.string.passwords_do_not_match_message));
+
+            return false;
         } else {
-            if (isInEditMode) {
-                User storedUser = PreferencesManager.getObject(etEmail.getText().toString(), User.class);
-
-                if (storedUser.getPassword().equals(etPassword.getText().toString())) {
-                    User newUser = new User((etId.getText().toString()),
-                            etName.getText().toString(),
-                            etLastName.getText().toString(),
-                            etEmail.getText().toString(),
-                            etRepeatPassword.getText().toString(),
-                            etPhoneNumber.getText().toString(),
-                            etAddress.getText().toString(), "2");
-
-                    PreferencesManager.putObject(etEmail.getText().toString(), newUser);
-
-                    toast(getString(R.string.successful_registration_message));
-
-                    onBackPressed();
-                } else {
-                    toast(getString(R.string.passwords_do_not_match_message));
-                }
-            } else {
-                User storedUser = PreferencesManager.getObject(etEmail.getText().toString(), User.class);
-
-                if (storedUser == null) {
-                    if (etPassword.getText().toString().equals(etRepeatPassword.getText().toString())) {
-                        User newUser = new User((etId.getText().toString()),
-                                etName.getText().toString(),
-                                etLastName.getText().toString(),
-                                etEmail.getText().toString(),
-                                etPassword.getText().toString(),
-                                etPhoneNumber.getText().toString(),
-                                etAddress.getText().toString(), "2");
-
-                        PreferencesManager.putObject(etEmail.getText().toString(), newUser);
-
-                        toast(getString(R.string.successful_registration_message));
-
-                        onBackPressed();
-                    } else {
-                        verticalStepperFormLayout.goToStep(5, false);
-
-                        etRepeatPassword.requestFocus();
-                        showKeyboard(etRepeatPassword, this);
-
-                        toast(getString(R.string.passwords_do_not_match_message));
-                    }
-                } else {
-                    if (etId.getText().toString().equals(String.valueOf(storedUser.getId()))) {
-                        verticalStepperFormLayout.goToStep(0, false);
-
-                        etId.requestFocus();
-                        showKeyboard(etId, this);
-
-                        toast(getString(R.string.id_already_in_use_message));
-                    } else if (etEmail.getText().toString().equals(storedUser.getEmail())) {
-                        verticalStepperFormLayout.goToStep(3, false);
-
-                        etEmail.requestFocus();
-                        showKeyboard(etAddress, this);
-
-                        toast(getString(R.string.email_already_in_use_message));
-                    }
-                }
-            }
+            return true;
         }
+    }
+
+    public String getTextFrom(AppCompatEditText textInputEditText) {
+        return textInputEditText.getText().toString();
     }
 }

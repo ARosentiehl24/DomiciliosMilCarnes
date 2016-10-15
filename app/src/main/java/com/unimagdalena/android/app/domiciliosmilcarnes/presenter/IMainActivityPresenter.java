@@ -1,14 +1,34 @@
 package com.unimagdalena.android.app.domiciliosmilcarnes.presenter;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.shawnlin.preferencesmanager.PreferencesManager;
+import com.unimagdalena.android.app.domiciliosmilcarnes.MilCarnesApp;
+import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.MainActivityPresenter;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.MainActivityView;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.VolleySingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class IMainActivityPresenter implements MainActivityPresenter {
 
     private MainActivityView mainActivityView;
+    private String url;
+    private User loggedUser;
 
     public IMainActivityPresenter(MainActivityView mainActivityView) {
         this.mainActivityView = mainActivityView;
@@ -49,26 +69,62 @@ public class IMainActivityPresenter implements MainActivityPresenter {
     }
 
     @Override
-    public void login(String email, String password) {
-        User storedUser = PreferencesManager.getObject(email, User.class);
-
-        if (storedUser == null) {
-            mainActivityView.clearInputs();
-            mainActivityView.showErrorMessage();
-        } else {
-            if (password.equals(storedUser.getPassword())) {
-                PreferencesManager.putString("connected_user", email);
-
-                mainActivityView.updateToolbarMenu(true, storedUser.getName());
-            } else {
-                mainActivityView.clearInputs();
-                mainActivityView.showErrorMessage();
-            }
-        }
+    public void itemProfile() {
+        mainActivityView.showProfile();
     }
 
     @Override
-    public void itemProfile() {
-        mainActivityView.showProfile();
+    public void login(final Context context, final String id, final String password) {
+        loggedUser = null;
+
+        url = MilCarnesApp.milCarnesApp.GET_USER();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(getClass().getSimpleName(), "onResponse: " + response);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+
+                    if (jsonObject.getString("estado").equals("1")) {
+                        Gson gson = new Gson();
+
+                        loggedUser = gson.fromJson(jsonObject.getString("usuarios"), User.class);
+
+                        PreferencesManager.putObject(context.getString(R.string.connected_user), loggedUser);
+
+                        mainActivityView.updateToolbarMenu(true, loggedUser.getName());
+                    } else {
+                        mainActivityView.showErrorMessage();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(getClass().getSimpleName(), "onErrorResponse: " + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put("usuario", id);
+                map.put("password", password);
+
+                return map;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 }

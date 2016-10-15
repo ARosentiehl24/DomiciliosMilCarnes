@@ -48,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        User user = (User) getIntent().getSerializableExtra("user");
+        User user = (User) getIntent().getSerializableExtra(getString(R.string.connected_user));
 
         setTitle(String.format("Perfil de %s %s", user.getName(), user.getLastName()));
 
@@ -85,12 +85,10 @@ public class ProfileActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.app_bar_edit:
-                String connectedUser = PreferencesManager.getString(getString(R.string.connected_user));
-
-                User user = PreferencesManager.getObject(connectedUser, User.class);
+                User user = PreferencesManager.getObject(getString(R.string.connected_user), User.class);
 
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("user", user);
+                bundle.putSerializable(getString(R.string.connected_user), user);
                 bundle.putBoolean("edit", true);
 
                 Navigator.with(this).build().goTo(SignUpActivity.class, bundle).animation().commit();

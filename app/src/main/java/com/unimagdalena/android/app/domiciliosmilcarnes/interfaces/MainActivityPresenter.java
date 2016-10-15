@@ -1,5 +1,9 @@
 package com.unimagdalena.android.app.domiciliosmilcarnes.interfaces;
 
+import android.content.Context;
+
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
+
 public interface MainActivityPresenter {
 
     void onCreate();
@@ -14,7 +18,7 @@ public interface MainActivityPresenter {
 
     void itemSignUp();
 
-    void login(String email, String password);
+    void login(Context context, String id, String password);
 
     void itemProfile();
 }

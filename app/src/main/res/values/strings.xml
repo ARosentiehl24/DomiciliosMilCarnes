@@ -21,7 +21,7 @@
     <string name="request_repeat_password">Enter the password again</string>
     <string name="request_phone_number">Enter a valid phone number</string>
     <string name="request_address">Enter your address</string>
-    <string name="nickname_does_not_exist_message">NickName does not exist</string>
+    <string name="user_does_not_exist_message">User does not exist</string>
     <string name="field_empty_message">This field is empty</string>
     <string name="passwords_do_not_match_message">The passwords do not match</string>
     <string name="id_already_in_use_message">This id is already in use</string>

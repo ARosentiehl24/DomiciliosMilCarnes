@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,27 +21,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.github.mmin18.widget.RealtimeBlurView;
 import com.shawnlin.preferencesmanager.PreferencesManager;
-import com.unimagdalena.android.app.domiciliosmilcarnes.MilCarnesApp;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.MainActivityView;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
-import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.VolleySingleton;
 import com.unimagdalena.android.app.domiciliosmilcarnes.presenter.IMainActivityPresenter;
 
 import org.fingerlinks.mobile.android.navigator.Navigator;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -182,75 +169,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
                         toast(getString(R.string.field_empty_message));
                     } else {
-                        final String url = MilCarnesApp.milCarnesApp.GET_USER();
-
-                        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                Log.d(getClass().getSimpleName(), "onResponse: " + response);
-
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-
-                                    if (jsonObject.getString("estado").equals("1")) {
-
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d(getClass().getSimpleName(), "onErrorResponse: " + error.toString());
-                            }
-                        }) {
-                            @Override
-                            protected Map<String, String> getParams() throws AuthFailureError {
-                                Map<String, String> map = new HashMap<>();
-                                map.put("usuario", email);
-                                map.put("password", password);
-
-                                return map;
-                            }
-
-                            @Override
-                            public Map<String, String> getHeaders() throws AuthFailureError {
-                                Map<String, String> params = new HashMap<>();
-                                params.put("Content-Type", "application/x-www-form-urlencoded");
-                                return params;
-                            }
-                        };
-
-                        /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                toast("Response: " + response.toString());
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                toast("Error: " + error.toString());
-                            }
-                        }) {
-                            @Override
-                            protected Map<String, String> getParams() throws AuthFailureError {
-                                Map<String, String> map = new HashMap<>();
-                                map.put("usuario", email);
-                                map.put("password", password);
-
-                                return map;
-                            }
-
-                            @Override
-                            public Map<String, String> getHeaders() throws AuthFailureError {
-                                Map<String, String> params = new HashMap<>();
-                                params.put("Content-Type", "application/x-www-form-urlencoded");
-                                return params;
-                            }
-                        };
-*/
-                        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                        iMainActivityPresenter.login(getApplicationContext(), email, password);
                     }
                     return true;
                 }
@@ -376,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
     @Override
     public void showErrorMessage() {
-        toast(getString(R.string.nickname_does_not_exist_message));
+        toast(getString(R.string.user_does_not_exist_message));
     }
 
     @Override
@@ -394,24 +313,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             toast(String.format(getString(R.string.welcome_message), name));
         }
 
-        /*Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);*/
-
         Navigator.with(this).build().goTo(MainActivity.class).animation().commit();
         finish();
     }
 
     @Override
     public void showProfile() {
-        String connectedUser = PreferencesManager.getString(getString(R.string.connected_user));
-
-        User user = PreferencesManager.getObject(connectedUser, User.class);
+        User user = PreferencesManager.getObject(getString(R.string.connected_user), User.class);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", user);
+        bundle.putSerializable(getString(R.string.connected_user), user);
 
         Navigator.with(this).build().goTo(ProfileActivity.class, bundle).animation().commit();
     }
