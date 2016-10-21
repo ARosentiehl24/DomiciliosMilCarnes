@@ -145,13 +145,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     public void setupViews() {
         setSupportActionBar(toolbar);
 
-        new Handler().postDelayed(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 blurView.getLayoutParams().height = inputContainer.getHeight() + 75;
                 blurView.requestLayout();
             }
-        }, 0);
+        });
 
         etPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

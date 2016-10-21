@@ -5,12 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.Plate;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PlateAdapter extends RecyclerView.Adapter<PlateAdapter.ViewHolder> {
@@ -36,7 +41,13 @@ public class PlateAdapter extends RecyclerView.Adapter<PlateAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(PlateAdapter.ViewHolder holder, int position) {
+        Plate plate = plateArrayList.get(position);
 
+        Glide.with(context).load(plate.getPicture()).dontAnimate().into(holder.picture);
+
+        holder.namePlate.setText(plate.getName());
+        holder.pricePlate.setText(String.format(Locale.ENGLISH, "$%d", plate.getPrice()));
+        holder.typePlate.setText(plate.getType());
     }
 
     @Override
@@ -57,6 +68,18 @@ public class PlateAdapter extends RecyclerView.Adapter<PlateAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+
+        @BindView(R.id.picture)
+        ImageView picture;
+
+        @BindView(R.id.namePlate)
+        TextView namePlate;
+
+        @BindView(R.id.typePlate)
+        TextView typePlate;
+
+        @BindView(R.id.pricePlate)
+        TextView pricePlate;
 
         private OnItemClickListener onItemClickListener;
 

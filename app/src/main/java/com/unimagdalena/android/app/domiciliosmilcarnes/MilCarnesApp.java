@@ -31,11 +31,11 @@ public class MilCarnesApp extends Application {
     }
 
     public String getIP() {
-        return PreferencesManager.getString("ip", "172.16.10.173");
+        return PreferencesManager.getString("ip", "172.16.6.194");
     }
 
     public String getPORT() {
-        return PreferencesManager.getString("port", "8080");
+        return PreferencesManager.getString("port", "8077");
     }
 
     public String GET_USER() {

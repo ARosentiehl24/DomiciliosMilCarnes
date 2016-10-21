@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.unimagdalena.android.app.domiciliosmilcarnes.MilCarnesApp;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
@@ -314,15 +314,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
     @Override
     public void sendData() {
         if (allFieldsAreValid()) {
-            final String cedula = getTextFrom(this.etId);
-            final String nombres = getTextFrom(this.etName);
-            final String apellidos = getTextFrom(this.etLastName);
-            final String telefono = getTextFrom(this.etPhoneNumber);
-            final String correo = getTextFrom(this.etEmail);
-            final String pass = getTextFrom(this.etPassword);
-            final String direccion = getTextFrom(this.etAddress);
-
-            StringRequest stringRequest = null;
+            StringRequest stringRequest;
 
             if (isInEditMode) {
 
@@ -346,32 +338,29 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                     protected Map<String, String> getParams() throws AuthFailureError {
                         HashMap<String, String> map = new HashMap<>();
 
-                        map.put("cedula", cedula);
-                        map.put("nombres", nombres);
-                        map.put("apellidos", apellidos);
-                        map.put("telefono", telefono);
-                        map.put("correo", correo);
-                        map.put("pass", pass);
-                        map.put("direccion", direccion);
-                        map.put("Rol", "1");
+                        map.put("cedula", getTextFrom(etId));
+                        map.put("nombres", getTextFrom(etName));
+                        map.put("apellidos", getTextFrom(etLastName));
+                        map.put("telefono", getTextFrom(etPhoneNumber));
+                        map.put("correo", getTextFrom(etEmail));
+                        map.put("pass", getTextFrom(etPassword));
+                        map.put("direccion", getTextFrom(etAddress));
+                        map.put("Rol", String.valueOf(1));
+
+                        Log.e(getClass().getSimpleName(), map.toString());
 
                         return map;
                     }
-
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("Content-Type", "application/x-www-form-urlencoded");
-                        return params;
-                    }
                 };
-            }
 
-            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+                VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+            }
         }
     }
 
     private void processCreateUpdateResponse(String response) throws JSONException {
+        Log.d(getClass().getSimpleName(), response);
+
         JSONObject jsonObject = new JSONObject(response);
 
         try {
@@ -481,6 +470,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
     }
 
     public String getTextFrom(AppCompatEditText textInputEditText) {
+        Log.e(getClass().getSimpleName(), textInputEditText.getText().toString());
+
         return textInputEditText.getText().toString();
     }
 }
