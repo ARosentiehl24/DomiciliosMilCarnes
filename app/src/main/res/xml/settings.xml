@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Ajustes de la base de datos">
+        <EditTextPreference
+            android:hint="IP"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:key="ip"
+            android:maxLines="1"
+            android:summary="0.0.0.0"
+            android:text="0.0.0.0"
+            android:title="Dirección IP a la base de datos" />
 
+        <EditTextPreference
+            android:hint="Port"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:key="port"
+            android:maxLines="1"
+            android:summary="8097"
+            android:title="Puerto de conexión a la base de datos" />
+    </PreferenceCategory>
 </PreferenceScreen>

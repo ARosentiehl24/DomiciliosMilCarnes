@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.unimagdalena.android.app.domiciliosmilcarnes.MilCarnesApp;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.Plate;
 
@@ -43,11 +44,13 @@ public class PlateAdapter extends RecyclerView.Adapter<PlateAdapter.ViewHolder> 
     public void onBindViewHolder(PlateAdapter.ViewHolder holder, int position) {
         Plate plate = plateArrayList.get(position);
 
-        Glide.with(context).load(plate.getPicture()).dontAnimate().into(holder.picture);
+        String path = "http://" + MilCarnesApp.milCarnesApp.getIP() + ":" + MilCarnesApp.milCarnesApp.getPORT() + "/DomiciliosMilCarnes/img/platos/" + plate.getIdPlato() + ".jpg";
 
-        holder.namePlate.setText(plate.getName());
-        holder.pricePlate.setText(String.format(Locale.ENGLISH, "$%d", plate.getPrice()));
-        holder.typePlate.setText(plate.getType());
+        Glide.with(context).load(path).dontAnimate().into(holder.picture);
+
+        holder.namePlate.setText(plate.getNombre());
+        holder.pricePlate.setText(String.format(Locale.ENGLISH, "$%d", plate.getPrecioUnitario()));
+        holder.typePlate.setText("Asado");
     }
 
     @Override

@@ -46,6 +46,14 @@ public class MilCarnesApp extends Application {
         return "http://" + getIP() + ":" + getPORT() + "/DomiciliosMilCarnes/services/registrarUsuario.php";
     }
 
+    public String UPDATE_USER() {
+        return "http://" + getIP() + ":" + getPORT() + "/DomiciliosMilCarnes/services/actualizarUsuario.php";
+    }
+
+    public String GET_PLATES() {
+        return "http://" + getIP() + ":" + getPORT() + "/DomiciliosMilCarnes/services/obtenerPlatos.php";
+    }
+
     public void setPreferencesManager(String name) {
         preferencesManager.setName(name);
         preferencesManager.setMode(Context.MODE_PRIVATE);

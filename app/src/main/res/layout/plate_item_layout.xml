@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="2.5dp"
+    android:clickable="true"
     android:foreground="?selectableItemBackground"
     android:orientation="vertical"
-    app:cardBackgroundColor="#4E2F2D"
+    app:cardBackgroundColor="#3A1B19"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -15,8 +16,8 @@
 
         <ImageView
             android:id="@+id/picture"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher" />
@@ -32,7 +33,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
 
             <View
                 android:id="@+id/divider"
@@ -47,7 +49,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/divider"
-                android:text="@string/app_name" />
+                android:text="@string/app_name"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/pricePlate"
@@ -55,7 +58,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
-                android:text="@string/app_name" />
+                android:text="@string/app_name"
+                android:textSize="15sp" />
         </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

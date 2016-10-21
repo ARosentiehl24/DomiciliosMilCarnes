@@ -317,7 +317,39 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
             StringRequest stringRequest;
 
             if (isInEditMode) {
+                stringRequest = new StringRequest(Request.Method.POST, MilCarnesApp.milCarnesApp.UPDATE_USER(), new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            processCreateUpdateResponse(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(SignUpActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        HashMap<String, String> map = new HashMap<>();
 
+                        map.put("cedula", getTextFrom(etId));
+                        map.put("nombres", getTextFrom(etName));
+                        map.put("apellidos", getTextFrom(etLastName));
+                        map.put("telefono", getTextFrom(etPhoneNumber));
+                        map.put("correo", getTextFrom(etEmail));
+                        map.put("pass", getTextFrom(etPassword));
+                        map.put("direccion", getTextFrom(etAddress));
+                        map.put("Rol", String.valueOf(1));
+
+                        Log.e(getClass().getSimpleName(), map.toString());
+
+                        return map;
+                    }
+                };
             } else {
                 stringRequest = new StringRequest(Request.Method.POST, MilCarnesApp.milCarnesApp.INSERT(), new Response.Listener<String>() {
                     @Override
@@ -352,9 +384,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                         return map;
                     }
                 };
-
-                VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
             }
+
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
         }
     }
 

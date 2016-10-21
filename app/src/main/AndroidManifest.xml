@@ -36,7 +36,9 @@
         <activity
             android:name=".view.activity.ProfileActivity"
             android:parentActivityName=".view.activity.MainActivity" />
-        <activity android:name=".view.activity.SettingsActivity"></activity>
+        <activity
+            android:name=".view.activity.SettingsActivity"
+            android:label="Configuración" />
     </application>
 
 </manifest>

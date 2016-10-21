@@ -4,67 +4,67 @@ import java.io.Serializable;
 
 public class Plate implements Serializable {
 
-    private String picture;
-    private String name;
-    private String description;
-    private String type;
-    private Integer qualification;
-    private Long price;
+    private Integer idPlato;
+    private String nombre;
+    private Long precioUnitario;
+    private String detalles;
+    private Integer calificacion;
+    private String TipoPlato;
 
-    public Plate(String picture, String name, String description, String type, Integer qualification, Long price) {
-        this.picture = picture;
-        this.name = name;
-        this.description = description;
-        this.type = type;
-        this.qualification = qualification;
-        this.price = price;
+    public Plate(Integer idPlato, String nombre, Long precioUnitario, String detalles, Integer calificacion, String tipoPlato) {
+        this.idPlato = idPlato;
+        this.nombre = nombre;
+        this.precioUnitario = precioUnitario;
+        this.detalles = detalles;
+        this.calificacion = calificacion;
+        TipoPlato = tipoPlato;
     }
 
-    public String getPicture() {
-        return picture;
+    public Integer getIdPlato() {
+        return idPlato;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setIdPlato(Integer idPlato) {
+        this.idPlato = idPlato;
     }
 
-    public String getName() {
-        return name;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getDescription() {
-        return description;
+    public Long getPrecioUnitario() {
+        return precioUnitario;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPrecioUnitario(Long precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
 
-    public String getType() {
-        return type;
+    public String getDetalles() {
+        return detalles;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setDetalles(String detalles) {
+        this.detalles = detalles;
     }
 
-    public Integer getQualification() {
-        return qualification;
+    public Integer getCalificacion() {
+        return calificacion;
     }
 
-    public void setQualification(Integer qualification) {
-        this.qualification = qualification;
+    public void setCalificacion(Integer calificacion) {
+        this.calificacion = calificacion;
     }
 
-    public Long getPrice() {
-        return price;
+    public String getTipoPlato() {
+        return TipoPlato;
     }
 
-    public void setPrice(Long price) {
-        this.price = price;
+    public void setTipoPlato(String tipoPlato) {
+        TipoPlato = tipoPlato;
     }
 }

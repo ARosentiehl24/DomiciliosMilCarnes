@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -26,10 +28,14 @@ import com.github.mmin18.widget.RealtimeBlurView;
 import com.shawnlin.preferencesmanager.PreferencesManager;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.interfaces.MainActivityView;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.Plate;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
 import com.unimagdalena.android.app.domiciliosmilcarnes.presenter.IMainActivityPresenter;
+import com.unimagdalena.android.app.domiciliosmilcarnes.view.adapter.PlateAdapter;
 
 import org.fingerlinks.mobile.android.navigator.Navigator;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
     @BindView(R.id.inputContainer)
     LinearLayout inputContainer;
+
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
 
     @BindView(R.id.blurView)
     RealtimeBlurView blurView;
@@ -152,6 +161,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
                 blurView.requestLayout();
             }
         });
+
+        Bundle bundle = getIntent().getExtras();
+
+        ArrayList<Plate> plates = (ArrayList<Plate>) bundle.getSerializable("plates");
+
+        PlateAdapter plateAdapter = new PlateAdapter(plates, this);
+        plateAdapter.setOnItemClickListener(new PlateAdapter.OnItemClickListener() {
+            @Override
+            public void OnItemClick(PlateAdapter.ViewHolder viewHolder, View itemView, int position) {
+
+            }
+
+            @Override
+            public void OnLongItemClick(PlateAdapter.ViewHolder viewHolder, View itemView, int position) {
+
+            }
+        });
+
+        recyclerView.setAdapter(plateAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         etPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -313,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             toast(String.format(getString(R.string.welcome_message), name));
         }
 
-        Navigator.with(this).build().goTo(MainActivity.class).animation().commit();
+        Navigator.with(this).build().goTo(SplashScreenActivity.class).animation().commit();
         finish();
     }
 
