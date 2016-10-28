@@ -3,20 +3,32 @@ package com.unimagdalena.android.app.domiciliosmilcarnes.view.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.shawnlin.preferencesmanager.PreferencesManager;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
+import com.unimagdalena.android.app.domiciliosmilcarnes.MilCarnesApp;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.VolleySingleton;
 
 import org.fingerlinks.mobile.android.navigator.Navigator;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    private User editedUser;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -47,22 +59,48 @@ public class ProfileActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        User user = (User) getIntent().getSerializableExtra(getString(R.string.connected_user));
-
-        setTitle(String.format("Perfil de %s %s", user.getName(), user.getLastName()));
-
-        tvId.setText(user.getId());
-        tvName.setText(user.getName());
-        tvLastName.setText(user.getLastName());
-        tvEmail.setText(user.getEmail());
-        tvPhoneNumber.setText(user.getPhoneNumber());
-        tvAddress.setText(user.getAddress());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        User user = (User) getIntent().getSerializableExtra(getString(R.string.connected_user));
+
+        String path = MilCarnesApp.milCarnesApp.GET_EDITED_USER() + "?id=" + user.getIdUsuario();
+
+        VolleySingleton.getInstance(this).addToRequestQueue(new JsonObjectRequest(Request.Method.GET, path, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e(getClass().getSimpleName(), response.toString());
+
+                try {
+                    if (response.getString("estado").equals("1")) {
+                        Gson gson = new Gson();
+
+                        editedUser = gson.fromJson(response.getString("usuarios"), User.class);
+
+                        setTitle(String.format("Perfil de %s %s", editedUser.getNombres(), editedUser.getApellidos()));
+
+                        tvId.setText(editedUser.getCedula());
+                        tvName.setText(editedUser.getNombres());
+                        tvLastName.setText(editedUser.getApellidos());
+                        tvEmail.setText(editedUser.getCorreo());
+                        tvPhoneNumber.setText(editedUser.getTelefono());
+                        tvAddress.setText(editedUser.getDireccion());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(ProfileActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }));
+
+        setTitle(String.format("Perfil de %s %s", user.getNombres(), user.getApellidos()));
     }
 
     @Override
@@ -85,7 +123,7 @@ public class ProfileActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.app_bar_edit:
-                User user = PreferencesManager.getObject(getString(R.string.connected_user), User.class);
+                User user = editedUser;
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(getString(R.string.connected_user), user);

@@ -4,28 +4,28 @@ import java.io.Serializable;
 
 public class Plate implements Serializable {
 
-    private Integer idPlato;
+    private Integer idplato;
     private String nombre;
     private Long precioUnitario;
     private String detalles;
     private Integer calificacion;
-    private String TipoPlato;
+    private String tipo;
 
-    public Plate(Integer idPlato, String nombre, Long precioUnitario, String detalles, Integer calificacion, String tipoPlato) {
-        this.idPlato = idPlato;
+    public Plate(Integer idplato, String nombre, Long precioUnitario, String detalles, Integer calificacion, String tipo) {
+        this.idplato = idplato;
         this.nombre = nombre;
         this.precioUnitario = precioUnitario;
         this.detalles = detalles;
         this.calificacion = calificacion;
-        TipoPlato = tipoPlato;
+        this.tipo = tipo;
     }
 
-    public Integer getIdPlato() {
-        return idPlato;
+    public Integer getIdplato() {
+        return idplato;
     }
 
-    public void setIdPlato(Integer idPlato) {
-        this.idPlato = idPlato;
+    public void setIdplato(Integer idplato) {
+        this.idplato = idplato;
     }
 
     public String getNombre() {
@@ -60,11 +60,11 @@ public class Plate implements Serializable {
         this.calificacion = calificacion;
     }
 
-    public String getTipoPlato() {
-        return TipoPlato;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setTipoPlato(String tipoPlato) {
-        TipoPlato = tipoPlato;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }

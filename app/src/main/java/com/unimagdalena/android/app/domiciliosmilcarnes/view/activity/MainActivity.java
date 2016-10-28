@@ -2,8 +2,10 @@ package com.unimagdalena.android.app.domiciliosmilcarnes.view.activity;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
@@ -43,6 +45,8 @@ import io.codetail.widget.RevealFrameLayout;
 
 public class MainActivity extends AppCompatActivity implements MainActivityView {
 
+    public static Context context;
+    private ArrayList<Plate> plates;
     private Boolean isLoginVisible = false;
     private IMainActivityPresenter iMainActivityPresenter;
     private RequestQueue requestQueue;
@@ -73,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        context = this;
 
         iMainActivityPresenter = new IMainActivityPresenter(this);
         iMainActivityPresenter.onCreate();
@@ -114,6 +120,38 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
+                    ArrayList<Plate> platesFiltered = new ArrayList<>();
+
+                    for (Plate plate : plates) {
+                        if (plate.getNombre().toLowerCase().contains(newText.toLowerCase())) {
+                            platesFiltered.add(plate);
+                        }
+                    }
+
+                    PlateAdapter plateAdapter = new PlateAdapter(platesFiltered, context);
+                    plateAdapter.setOnItemClickListener(new PlateAdapter.OnItemClickListener() {
+                        @Override
+                        public void OnItemClick(PlateAdapter.ViewHolder viewHolder, View itemView, int position) {
+                            Bundle plate = new Bundle();
+                            plate.putSerializable("plate", plates.get(position));
+
+                            Intent intent = new Intent(context, DetailActivity.class);
+                            intent.putExtras(plate);
+
+                            ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, itemView.findViewById(R.id.picture), "plate");
+                            startActivity(intent, activityOptionsCompat.toBundle());
+                        }
+
+                        @Override
+                        public void OnLongItemClick(PlateAdapter.ViewHolder viewHolder, View itemView, int position) {
+
+                        }
+                    });
+
+                    recyclerView.setAdapter(plateAdapter);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+
                     return false;
                 }
             });
@@ -164,13 +202,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         Bundle bundle = getIntent().getExtras();
 
-        ArrayList<Plate> plates = (ArrayList<Plate>) bundle.getSerializable("plates");
+        plates = (ArrayList<Plate>) bundle.getSerializable("plates");
 
         PlateAdapter plateAdapter = new PlateAdapter(plates, this);
         plateAdapter.setOnItemClickListener(new PlateAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(PlateAdapter.ViewHolder viewHolder, View itemView, int position) {
+                Bundle plate = new Bundle();
+                plate.putSerializable("plate", plates.get(position));
 
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtras(plate);
+
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, itemView.findViewById(R.id.picture), "plate");
+                startActivity(intent, activityOptionsCompat.toBundle());
             }
 
             @Override

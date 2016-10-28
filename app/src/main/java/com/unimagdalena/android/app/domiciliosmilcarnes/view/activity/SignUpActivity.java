@@ -50,6 +50,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
     private AppCompatEditText etPhoneNumber;
     private AppCompatEditText etAddress;
     private Boolean isInEditMode = false;
+    private User user;
 
     private ISignUpActivityPresenter iSignUpActivityPresenter;
 
@@ -96,7 +97,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                 getString(R.string.name),
                 getString(R.string.last_name),
                 getString(R.string.email),
-                getString(R.string.password),
+                getString(R.string.pass),
                 getString(R.string.repeat_password),
                 getString(R.string.phone_number),
                 getString(R.string.address)};
@@ -137,20 +138,23 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
         if (isInEditMode) {
             setTitle("Modificar Perfil");
 
-            User user = (User) getIntent().getSerializableExtra(getString(R.string.connected_user));
+            user = (User) getIntent().getSerializableExtra(getString(R.string.connected_user));
 
-            etId.setText(String.valueOf(user.getId()));
-            etName.setText(user.getName());
-            etLastName.setText(user.getLastName());
-            etEmail.setText(user.getEmail());
-            etPhoneNumber.setText(user.getPhoneNumber());
-            etAddress.setText(user.getAddress());
+            etId.setText(String.valueOf(user.getCedula()));
+            etName.setText(user.getNombres());
+            etLastName.setText(user.getApellidos());
+            etEmail.setText(user.getCorreo());
+            etPhoneNumber.setText(user.getTelefono());
+            etAddress.setText(user.getDireccion());
 
             etId.setEnabled(false);
             etEmail.setEnabled(false);
 
             etPassword.setHint("Contraseña anterior");
+            etPassword.setEnabled(false);
+
             etRepeatPassword.setHint("Nueva contraseña");
+            etRepeatPassword.setEnabled(false);
 
             verticalStepperFormLayout.setStepTitle(4, "Contraseña anterior");
             verticalStepperFormLayout.setStepSubtitle(4, "Ingrese la contraseña anterior");
@@ -220,7 +224,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                 break;
             case 4:
                 etPassword = new AppCompatEditText(this);
-                etPassword.setHint(R.string.password);
+                etPassword.setHint(R.string.pass);
                 etPassword.setHintTextColor(ContextCompat.getColor(this, R.color.hintTextColor));
                 etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 etPassword.setMaxLines(1);
@@ -336,16 +340,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                     protected Map<String, String> getParams() throws AuthFailureError {
                         HashMap<String, String> map = new HashMap<>();
 
+                        map.put("idUsuario", user.getIdUsuario());
                         map.put("cedula", getTextFrom(etId));
                         map.put("nombres", getTextFrom(etName));
                         map.put("apellidos", getTextFrom(etLastName));
                         map.put("telefono", getTextFrom(etPhoneNumber));
                         map.put("correo", getTextFrom(etEmail));
-                        map.put("pass", getTextFrom(etPassword));
                         map.put("direccion", getTextFrom(etAddress));
-                        map.put("Rol", String.valueOf(1));
-
-                        Log.e(getClass().getSimpleName(), map.toString());
 
                         return map;
                     }
@@ -378,8 +379,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                         map.put("pass", getTextFrom(etPassword));
                         map.put("direccion", getTextFrom(etAddress));
                         map.put("Rol", String.valueOf(1));
-
-                        Log.e(getClass().getSimpleName(), map.toString());
 
                         return map;
                     }
@@ -452,23 +451,27 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
 
             return false;
         } else if (etPassword.getText().length() <= 0) {
-            verticalStepperFormLayout.goToStep(4, false);
+            if (!isInEditMode) {
+                verticalStepperFormLayout.goToStep(4, false);
 
-            etPassword.requestFocus();
-            showKeyboard(etPassword, this);
+                etPassword.requestFocus();
+                showKeyboard(etPassword, this);
 
-            toast(getString(R.string.field_empty_message));
+                toast(getString(R.string.field_empty_message));
+            }
 
-            return false;
+            return isInEditMode;
         } else if (etRepeatPassword.getText().length() <= 0) {
-            verticalStepperFormLayout.goToStep(5, false);
+            if (!isInEditMode) {
+                verticalStepperFormLayout.goToStep(5, false);
 
-            etRepeatPassword.requestFocus();
-            showKeyboard(etRepeatPassword, this);
+                etRepeatPassword.requestFocus();
+                showKeyboard(etRepeatPassword, this);
 
-            toast(getString(R.string.field_empty_message));
+                toast(getString(R.string.field_empty_message));
+            }
 
-            return false;
+            return isInEditMode;
         } else if (etPhoneNumber.getText().length() <= 0) {
             verticalStepperFormLayout.goToStep(6, false);
 
@@ -502,8 +505,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
     }
 
     public String getTextFrom(AppCompatEditText textInputEditText) {
-        Log.e(getClass().getSimpleName(), textInputEditText.getText().toString());
-
         return textInputEditText.getText().toString();
     }
 }

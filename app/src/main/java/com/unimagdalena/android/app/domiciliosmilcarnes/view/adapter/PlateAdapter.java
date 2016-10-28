@@ -2,6 +2,7 @@ package com.unimagdalena.android.app.domiciliosmilcarnes.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,13 +45,15 @@ public class PlateAdapter extends RecyclerView.Adapter<PlateAdapter.ViewHolder> 
     public void onBindViewHolder(PlateAdapter.ViewHolder holder, int position) {
         Plate plate = plateArrayList.get(position);
 
-        String path = "http://" + MilCarnesApp.milCarnesApp.getIP() + ":" + MilCarnesApp.milCarnesApp.getPORT() + "/DomiciliosMilCarnes/img/platos/" + plate.getIdPlato() + ".jpg";
+        String path = "http://" + MilCarnesApp.milCarnesApp.getIP() + ":" + MilCarnesApp.milCarnesApp.getPORT() + "/DomiciliosMilCarnes/img/platos/" + plate.getIdplato() + ".jpg";
+
+        Log.e(getClass().getSimpleName(), plate.getTipo());
 
         Glide.with(context).load(path).dontAnimate().into(holder.picture);
 
         holder.namePlate.setText(plate.getNombre());
         holder.pricePlate.setText(String.format(Locale.ENGLISH, "$%d", plate.getPrecioUnitario()));
-        holder.typePlate.setText("Asado");
+        holder.typePlate.setText(plate.getTipo());
     }
 
     @Override

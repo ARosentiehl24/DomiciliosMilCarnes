@@ -50,6 +50,10 @@ public class MilCarnesApp extends Application {
         return "http://" + getIP() + ":" + getPORT() + "/DomiciliosMilCarnes/services/actualizarUsuario.php";
     }
 
+    public String GET_EDITED_USER() {
+        return "http://" + getIP() + ":" + getPORT() + "/DomiciliosMilCarnes/services/obtenerUsuario.php";
+    }
+
     public String GET_PLATES() {
         return "http://" + getIP() + ":" + getPORT() + "/DomiciliosMilCarnes/services/obtenerPlatos.php";
     }

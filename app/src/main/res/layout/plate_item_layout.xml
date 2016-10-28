@@ -7,7 +7,7 @@
     android:clickable="true"
     android:foreground="?selectableItemBackground"
     android:orientation="vertical"
-    app:cardBackgroundColor="#3A1B19"
+    app:cardBackgroundColor="@color/colorPrimary"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -20,7 +20,8 @@
             android:layout_height="100dp"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_launcher"
+            android:transitionName="plate" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -33,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorAccent"
                 android:textSize="20sp" />
 
             <View
@@ -41,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@id/namePlate"
-                android:background="@color/colorPrimaryDark" />
+                android:background="@color/colorAccent" />
 
             <TextView
                 android:id="@+id/typePlate"
@@ -50,6 +51,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/divider"
                 android:text="@string/app_name"
+                android:textColor="@color/colorAccent"
                 android:textSize="18sp" />
 
             <TextView
@@ -57,8 +59,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
                 android:text="@string/app_name"
+                android:textColor="@color/colorAccent"
                 android:textSize="15sp" />
         </RelativeLayout>
     </LinearLayout>

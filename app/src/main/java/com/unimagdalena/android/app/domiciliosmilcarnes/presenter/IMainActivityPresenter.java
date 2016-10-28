@@ -82,8 +82,6 @@ public class IMainActivityPresenter implements MainActivityPresenter {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(getClass().getSimpleName(), "onResponse: " + response);
-
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
@@ -92,9 +90,11 @@ public class IMainActivityPresenter implements MainActivityPresenter {
 
                         loggedUser = gson.fromJson(jsonObject.getString("usuarios"), User.class);
 
+                        //Toast.makeText(MainActivity.context, loggedUser.toString() + " ----------" + response, Toast.LENGTH_LONG).show();
+
                         PreferencesManager.putObject(context.getString(R.string.connected_user), loggedUser);
 
-                        mainActivityView.updateToolbarMenu(true, loggedUser.getName());
+                        mainActivityView.updateToolbarMenu(true, loggedUser.getNombres());
                     } else {
                         mainActivityView.showErrorMessage();
                     }
