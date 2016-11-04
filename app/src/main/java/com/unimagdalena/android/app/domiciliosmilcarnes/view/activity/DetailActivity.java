@@ -36,6 +36,8 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.description)
     TextView description;
 
+    private Plate plate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +47,9 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Plate plate = (Plate) getIntent().getExtras().getSerializable("plate");
+        plate = (Plate) getIntent().getExtras().getSerializable("plate");
 
-        String path = "http://" + MilCarnesApp.milCarnesApp.getIP() + ":" + MilCarnesApp.milCarnesApp.getPORT() + "/DomiciliosMilCarnes/img/platos/" + plate.getIdplato() + ".jpg";
+        String path = "http://" + MilCarnesApp.milCarnesApp.getIP() + ":" + MilCarnesApp.milCarnesApp.getPORT() + "/DomiciliosMilCarnes/img/platos/" + plate.getIdplato() + ".png";
 
         Glide.with(this).load(path).into(picture);
 
@@ -75,6 +77,9 @@ public class DetailActivity extends AppCompatActivity {
         switch (id) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.app_bar_shopping_cart:
+                MilCarnesApp.milCarnesApp.addPlate(plate);
                 return true;
         }
 

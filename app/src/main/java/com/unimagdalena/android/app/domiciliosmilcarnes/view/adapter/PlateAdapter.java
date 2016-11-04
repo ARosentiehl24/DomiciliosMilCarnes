@@ -45,7 +45,7 @@ public class PlateAdapter extends RecyclerView.Adapter<PlateAdapter.ViewHolder> 
     public void onBindViewHolder(PlateAdapter.ViewHolder holder, int position) {
         Plate plate = plateArrayList.get(position);
 
-        String path = "http://" + MilCarnesApp.milCarnesApp.getIP() + ":" + MilCarnesApp.milCarnesApp.getPORT() + "/DomiciliosMilCarnes/img/platos/" + plate.getIdplato() + ".jpg";
+        String path = "http://" + MilCarnesApp.milCarnesApp.getIP() + ":" + MilCarnesApp.milCarnesApp.getPORT() + "/DomiciliosMilCarnes/img/platos/" + plate.getIdplato() + ".png";
 
         Log.e(getClass().getSimpleName(), plate.getTipo());
 

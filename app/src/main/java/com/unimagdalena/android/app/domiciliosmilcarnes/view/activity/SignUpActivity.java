@@ -124,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
                 .buttonPressedBackgroundColor(colorPrimaryDark)
                 .buttonPressedTextColor(colorAccent)
                 .stepNumberTextColor(colorAccent)
-                .stepTitleTextColor(colorPrimary)
+                .stepTitleTextColor(colorAccent)
                 .stepSubtitleTextColor(ContextCompat.getColor(getApplicationContext(), R.color.textColor))
                 .showVerticalLineWhenStepsAreCollapsed(false);
         builder.init();

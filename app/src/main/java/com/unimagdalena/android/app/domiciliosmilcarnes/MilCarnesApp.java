@@ -4,6 +4,10 @@ import android.app.Application;
 import android.content.Context;
 
 import com.shawnlin.preferencesmanager.PreferencesManager;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.Plate;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class MilCarnesApp extends Application {
@@ -15,6 +19,8 @@ public class MilCarnesApp extends Application {
     private PreferencesManager preferencesManager;
 
     public static MilCarnesApp milCarnesApp;
+
+    private ArrayList<Plate> plates;
 
     @Override
     public void onCreate() {
@@ -28,6 +34,8 @@ public class MilCarnesApp extends Application {
 
         preferencesManager = new PreferencesManager(this);
         setPreferencesManager(SETTINGS_PREFERENCES);
+
+        plates = new ArrayList<>();
     }
 
     public String getIP() {
@@ -62,5 +70,13 @@ public class MilCarnesApp extends Application {
         preferencesManager.setName(name);
         preferencesManager.setMode(Context.MODE_PRIVATE);
         preferencesManager.init();
+    }
+
+    public void addPlate(Plate plate) {
+        plates.add(plate);
+    }
+
+    public ArrayList<Plate> getPlates() {
+        return plates;
     }
 }

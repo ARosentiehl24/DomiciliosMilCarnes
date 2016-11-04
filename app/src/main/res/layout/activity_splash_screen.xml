@@ -30,7 +30,6 @@
         android:layout_weight="1">
 
         <ProgressBar
-            android:indeterminateTint="@color/colorAccent"
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"

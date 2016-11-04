@@ -167,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.app_bar_order:
+                Navigator.with(this).build().goTo(OrderActivity.class).animation().commit();
+                return true;
             case R.id.app_bar_log_out:
                 PreferencesManager.putBoolean(getString(R.string.there_connected_user), false);
 

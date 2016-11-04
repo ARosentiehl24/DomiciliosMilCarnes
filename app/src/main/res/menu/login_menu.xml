@@ -16,6 +16,11 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/app_bar_order"
+        android:title="@string/app_bar_order"
+        app:showAsAction="collapseActionView" />
+
+    <item
         android:id="@+id/app_bar_log_out"
         android:icon="@drawable/ic_exit_to_app_black_24dp"
         android:title="@string/sign_out"

@@ -39,7 +39,12 @@
         <activity
             android:name=".view.activity.SettingsActivity"
             android:label="Configuración" />
-        <activity android:name=".view.activity.DetailActivity"></activity>
+        <activity
+            android:name=".view.activity.DetailActivity"
+            android:parentActivityName=".view.activity.MainActivity" />
+        <activity
+            android:name=".view.activity.OrderActivity"
+            android:parentActivityName=".view.activity.MainActivity"/>
     </application>
 
 </manifest>
