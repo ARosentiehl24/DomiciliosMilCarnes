@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.Comentario;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.Plate;
 
 import java.util.ArrayList;
@@ -46,6 +47,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return plates.size();
+    }
+
+    public Plate plate(int index) {
+        return plates.get(index);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

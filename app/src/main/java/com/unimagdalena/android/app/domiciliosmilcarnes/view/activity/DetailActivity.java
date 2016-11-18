@@ -1,17 +1,28 @@
 package com.unimagdalena.android.app.domiciliosmilcarnes.view.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.shawnlin.preferencesmanager.PreferencesManager;
 import com.unimagdalena.android.app.domiciliosmilcarnes.MilCarnesApp;
 import com.unimagdalena.android.app.domiciliosmilcarnes.R;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.Comentario;
 import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.Plate;
+import com.unimagdalena.android.app.domiciliosmilcarnes.model.entity.User;
+import com.unimagdalena.android.app.domiciliosmilcarnes.view.adapter.ComentarioAdapter;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +47,21 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.description)
     TextView description;
 
+    @BindView(R.id.btnEnviar)
+    Button btnEnviar;
+
+    @BindView(R.id.campoComentario)
+    TextInputEditText campoComentario;
+
+    @BindView(R.id.comentarios)
+    RecyclerView rvComentarios;
+
+    private int cantidadComentarios;
+
+    private ArrayList<Comentario> comentarios;
+    private ComentarioAdapter comentarioAdapter;
     private Plate plate;
+    private User user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +71,10 @@ public class DetailActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (PreferencesManager.getBoolean(getString(R.string.there_connected_user))) {
+            user = PreferencesManager.getObject(getString(R.string.connected_user), User.class);
+        }
 
         plate = (Plate) getIntent().getExtras().getSerializable("plate");
 
@@ -57,6 +86,34 @@ public class DetailActivity extends AppCompatActivity {
         typePlate.setText(plate.getTipo());
         pricePlate.setText(String.format("$%s", String.valueOf(plate.getPrecioUnitario())));
         description.setText(plate.getDetalles());
+
+        comentarios = new ArrayList<>();
+
+        cantidadComentarios = PreferencesManager.getInt(plate.getNombre(), 0);
+
+        for (int i = 1; i <= cantidadComentarios; i++) {
+            comentarios.add(new Comentario(PreferencesManager.getString(plate.getNombre() + "_" + i)));
+        }
+
+        btnEnviar.setEnabled(PreferencesManager.getBoolean(getString(R.string.there_connected_user)));
+        campoComentario.setEnabled(PreferencesManager.getBoolean(getString(R.string.there_connected_user)));
+
+        comentarioAdapter = new ComentarioAdapter(comentarios, this);
+        rvComentarios.setAdapter(comentarioAdapter);
+        rvComentarios.setHasFixedSize(true);
+        rvComentarios.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        btnEnviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cantidadComentarios++;
+
+                PreferencesManager.putInt(plate.getNombre(), cantidadComentarios);
+                PreferencesManager.putString((plate.getNombre() + "_" + cantidadComentarios), user.getIdUsuario() + ":" + user.getNombres() + ":" + campoComentario.getText().toString());
+
+                comentarioAdapter.addComentario(new Comentario(user.getIdUsuario() + ":" + user.getNombres() + ":" + campoComentario.getText().toString()));
+            }
+        });
     }
 
     @Override

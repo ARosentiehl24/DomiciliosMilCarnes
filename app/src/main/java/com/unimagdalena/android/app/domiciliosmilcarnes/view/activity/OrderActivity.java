@@ -1,5 +1,6 @@
 package com.unimagdalena.android.app.domiciliosmilcarnes.view.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,9 +30,20 @@ public class OrderActivity extends AppCompatActivity {
     @OnClick(R.id.order)
     public void OnClick(View view) {
         if (view.getId() == R.id.order) {
-            onBackPressed();
+            long totalPrice = 0;
+
+            for (int i = 0; i < orderAdapter.getItemCount(); i++) {
+                totalPrice += orderAdapter.plate(i).getPrecioUnitario();
+            }
+
+            Bundle bundle = new Bundle();
+            bundle.putLong("totalPrice", totalPrice);
+
+            Navigator.with(this).build().goTo(DoneActivity.class, bundle).animation().commit();
         }
     }
+
+    private OrderAdapter orderAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +54,7 @@ public class OrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        OrderAdapter orderAdapter = new OrderAdapter(this, MilCarnesApp.milCarnesApp.getPlates());
+        orderAdapter = new OrderAdapter(this, MilCarnesApp.milCarnesApp.getPlates());
 
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setHasFixedSize(true);
